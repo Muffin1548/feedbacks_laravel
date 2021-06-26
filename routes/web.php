@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\UserController;
+use App\Models\Cities;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\View;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,11 +20,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->name('dashboard');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('dashboard', [FeedbackController::class, 'index'])->name('dashboard');
+
+Route::get('/', [FeedbackController::class, 'index'])->name('dashboard');
+
+Route::get('/new-feedback', function (){
+    return view('feedbacks.create');
+})->middleware(['auth'])->name('new-feedback');
+
+Route::post('create', [FeedbackController::class, 'store'])->middleware(['auth']);

@@ -15,15 +15,15 @@ class Feedbacks extends Migration
     {
         Schema::create('feedbacks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_cities');
+            $table->unsignedBigInteger('cities_id');
             $table->foreign('id_cities')->references('id')->on('cities')->onDelete('cascade');
             $table->string('title');
             $table->text('text');
             $table->tinyInteger('rating');
-            $table->string('img');
-            $table->unsignedBigInteger('id_author');
-            $table->foreign('id_author')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('date_create');
+            $table->string('img')->nullable();
+            $table->unsignedBigInteger('author_id');
+            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
