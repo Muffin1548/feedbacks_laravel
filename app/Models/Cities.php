@@ -19,9 +19,9 @@ class Cities extends Model
 {
     protected $guarded =[];
 
-    public function feedbacks(): BelongsTo
+    public function feedbacks(): HasMany
     {
-        return $this->belongsTo(Feedbacks::class);
+        return $this->hasMany(Feedbacks::class, 'city_id');
     }
 
     public function author(): HasMany

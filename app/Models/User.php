@@ -53,7 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function feedbacks(): HasMany
     {
-        return $this->hasMany(Feedbacks::class);
+        return $this->hasMany(Feedbacks::class, 'author_id');
     }
 
     public function cities(): BelongsTo

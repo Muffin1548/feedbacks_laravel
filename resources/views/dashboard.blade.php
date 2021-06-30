@@ -3,14 +3,79 @@
     @if($feedbacks->count() == 0)
         Отзывов для вашего города нет
     @else
-        <div class="asd">
+        <div class="container">
             @foreach($feedbacks as $feedback)
-                <div class="{{$feedback->title}}">
-                    <p>{{$feedback->title}}
-                        <a>
-                            = {{$feedback->text}}
-                        </a>
-                    </p>
+                <div class="{{$feedback->title}} flex justify-between items-center h-[var(--height)] border-b border-gray-100">
+                    <div class="">
+                        <h3 class="font-semibold text-xl text-gray-800 leading-tight">
+                            {{$feedback->title}}
+                        </h3>
+                        <div class="">
+                            <div class="flex">
+                                <p>
+                                    {{$feedback->text}}
+                                </p>
+                            </div>
+
+                            <div class="">
+                                <div>
+                                    <a>
+                                        Рейтинг: {{$feedback->rating}}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0 flex items-center">
+                        <img src="{{ '.'.Storage::url('image/feedbacks/thumbnail/'.$feedback->img) }}" alt=""
+                             class="block h-10 w-auto fill-current text-gray-600" >
+                    </div>
+                    <div class="flex-shrink-0 flex">
+                        <div class="drop-empty-rules">
+                            @if(!Auth::user())
+                                <div
+                                    class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                    Автор: {{ $feedback->author->name }}
+                                </div>
+                            @else
+                                @if(Auth::user()->name == $feedback->author->name)
+                                    <div
+                                        class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                        <button class="btn" style="float: right"><a
+                                                href="{{ url('edit/'.$feedback->title)}}">Edit Post</a></button>
+                                    </div>
+                                @endif
+                                <x-dropdown align="right" width="48">
+
+                                    <x-slot name="trigger">
+                                        <button
+                                            class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                            <div>Автор: {{ $feedback->author->name }}</div>
+
+                                            <div class="ml-1">
+                                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                     viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                          clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                        </button>
+                                    </x-slot>
+
+                                    <x-slot name="content">
+                                        <div>
+                                            {{$feedback->author->phone}}
+                                        </div>
+                                        <div>
+                                            {{$feedback->author->id}}
+                                        </div>
+                                        <a href="{{ url('/user/'.$feedback->author_id)}}">{{ $feedback->author->name }}</a></p>
+                                    </x-slot>
+                                </x-dropdown>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -22,7 +87,7 @@
     </div>
 
     <div id="dialog1" hidden>
-        <div id="city" class="form-control input-lg ui-widget" style="z-index: 100">
+        <div id="city" class="form-control input-lg ui-widget">
             <input id="tags" type="text">
         </div>
         <div id="qwe"></div>
@@ -36,13 +101,13 @@
 
             var availableTags = [
                 @foreach($cities as $city)
-                "{{$city->name}}",
+                    "{{$city->name}}",
                 @endforeach
             ];
 
-            @if(Session::has('name'))
-                data = `{{Session::get('name')}}`
-            $('.getCity').html(data)
+            @if(Session::has('city'))
+                data = `{{Session::get('city')}}`
+                $('.getCity').html(data)
             @endif
 
             $('#city').change(function () {
@@ -50,7 +115,6 @@
                 const city_id = $(this).val();
                 const city = $(this).find('option:selected').text();
                 $('.getCity').html(city)
-                console.log(city);
                 $.ajax({
                     url: "dashboard",
                     type: 'GET',
@@ -62,8 +126,6 @@
                     },
                     success: (data) => {
                         $('.dsa').html(data);
-
-                        console.log(data)
                     }
                 })
 
@@ -82,8 +144,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: (data) => {
-                        console.log(data)
-                        $('.asd').html(data);
+                        $('.container').html(data);
 
                     }
                 })
@@ -114,7 +175,7 @@
                     },
                     success: (data) => {
                         console.log(data)
-                        $('.asd').html(data);
+                        $('.container').html(data);
                     }
                 })
                 $('#dialog1').dialog('close');
@@ -131,9 +192,9 @@
                 await response.json().then(a => $('#cityip').append(a.city));
             };
 
-            console.log(getData());
+            getData();
 
-            @if(!Session::has('name'))
+            @if(!Session::has('city'))
             $("#dialog").dialog({
                 open: function (event, ui) {
                     $('#divInDialog').load();

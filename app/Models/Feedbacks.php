@@ -25,8 +25,8 @@ class Feedbacks extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function city(): HasMany
+    public function city(): BelongsTo
     {
-        return $this->hasMany(Cities::class);
+        return $this->BelongsTo(Cities::class);
     }
 }

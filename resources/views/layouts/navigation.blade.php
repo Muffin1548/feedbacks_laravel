@@ -17,23 +17,23 @@
                     </x-nav-link>
                 </div>
                 @if(Auth::user())
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('new-feedback')" :active="request()->routeIs('new-feedback')">
-                        {{ __('Оставить отзыв') }}
-                    </x-nav-link>
-                </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('new-feedback')" :active="request()->routeIs('new-feedback')">
+                            {{ __('Оставить отзыв') }}
+                        </x-nav-link>
+                    </div>
                 @endif
             </div>
 
-
             <div class="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 items-center getCity ">
                 <div class="form-group">
-                    @if(Session::has('name'))
-                        {{Session::get('name')}}
+                    @if(Session::has('city'))
+                        {{Session::get('city')}}
                     @endif
                 </div>
             </div>
-        @if(Auth::user() !=null )
+
+            @if(Auth::user())
             <!-- Settings Dropdown -->
                 <div class="hidden sm:flex sm:items-center sm:ml-6">
 
@@ -86,6 +86,7 @@
                 </div>
             @endif
         </div>
+
     </div>
     @if (Route::has('login'))
         <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
@@ -108,7 +109,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
-    @if(Auth::user()!=null)
+    @if(Auth::user())
         <!-- Responsive Settings Options -->
             <div class="pt-4 pb-1 border-t border-gray-200">
                 <div class="px-4">

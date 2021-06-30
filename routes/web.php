@@ -6,8 +6,11 @@ use App\Http\Controllers\UserController;
 use App\Models\Cities;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,3 +45,8 @@ Route::get('/new-feedback', function (){
 })->middleware(['auth'])->name('new-feedback');
 
 Route::post('create', [FeedbackController::class, 'store'])->middleware(['auth']);
+
+
+Route::get('edit/{slug}', [FeedbackController::class, 'edit']);
+
+Route::get('user/{id}', [UserController::class, 'profile'])->where('id','[0-9]+')->name('profile');
