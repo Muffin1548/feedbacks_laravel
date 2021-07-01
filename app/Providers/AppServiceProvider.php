@@ -26,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $cities = Cities::all();
-        View::share('cities',$cities);
+        View::share('cities', $cities);
     }
 }

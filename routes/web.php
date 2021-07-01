@@ -50,3 +50,5 @@ Route::post('create', [FeedbackController::class, 'store'])->middleware(['auth']
 Route::get('edit/{slug}', [FeedbackController::class, 'edit']);
 
 Route::get('user/{id}', [UserController::class, 'profile'])->where('id','[0-9]+')->name('profile');
+
+Route::post('update', [FeedbackController::class, 'update'])->middleware(['auth']);

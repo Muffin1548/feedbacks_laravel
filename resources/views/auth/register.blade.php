@@ -27,6 +27,12 @@
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required/>
             </div>
 
+            <div class="mt-4">
+                <x-label for="phone" :value="__('Phone')"/>
+
+                <x-input id="phone" class="block mt-1 w-full" type="phone" name="phone" :value="old('phone')" required/>
+            </div>
+
             <!-- Password -->
             <div class="mt-4">
                 <x-label for="password" :value="__('Password')"/>
@@ -45,10 +51,11 @@
                          type="password"
                          name="password_confirmation" required/>
             </div>
+
             <div class="mt-4">
-                <label for=""></label>
+                <label for="captcha"></label>
                 <img src="{{ captcha_src() }}" alt="captcha" class="captcha-img" data-refresh-config="default"><a
-                    href="#" id="refresh"><span class="glyphicon glyphicon-refresh"></span></a></p>
+                    href="#" id="refresh"><span class="glyphicon glyphicon-refresh"></span></a>
             </div>
 
             <div class="mt-4">

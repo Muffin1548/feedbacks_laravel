@@ -15,6 +15,11 @@ class FeedbacksRepository
         $this->cityRepository = new CityRepository();
     }
 
+    public function getAllFeedbacks()
+    {
+        return Feedbacks::all();
+    }
+
     public function getFeedbacksByCityId(int $id)
     {
         return Feedbacks::where('city_id', $id)->orWhere('city_id')->get();
@@ -32,8 +37,13 @@ class FeedbacksRepository
         return Feedbacks::create($data);
     }
 
-    public function getFeedbackByTitle(string $title)
+    public function getFeedbackById(int $id)
     {
-        return Feedbacks::where('title', $title)->first();
+        return Feedbacks::where('id', $id)->first();
+    }
+
+    public function updateFeedback(Feedbacks $feedbacks): bool
+    {
+        return $feedbacks->save();
     }
 }

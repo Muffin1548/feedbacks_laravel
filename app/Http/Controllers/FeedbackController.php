@@ -3,34 +3,28 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\Cities;
-use App\Models\Feedbacks;
-use App\Services\CityServices;
 use App\Services\FeedbacksService;
 use App\Services\ImageService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 
 class FeedbackController extends Controller
 {
     private FeedbacksService $feedbacksService;
     private ImageService $imgService;
-    private CityServices $cityService;
 
     public function __construct()
     {
         $this->feedbacksService = new FeedbacksService();
         $this->imgService = new ImageService();
-        $this->cityService = new CityServices();
     }
 
     public function index(Request $request)
     {
 
-        $feedbacks = Feedbacks::all();
+        $feedbacks = $this->feedbacksService->getAllFeedbacks();
 
         if ($request->ajax()) {
             $city = $request->city;
@@ -66,9 +60,18 @@ class FeedbackController extends Controller
             'img' => $filename
         ];
 
-        $this->feedbacksService->store($data);
+        $validator = Validator::make($data, [
+            'title' => 'required|max:100',
+            'text' => 'required|max:255',
+        ]);
 
-        return redirect('dashboard');
+        if ($validator->fails()) {
+            return redirect('new-feedback')->withErrors('Title already exist or something else')->withInput();
+        } else {
+            $this->feedbacksService->store($data);
+            return redirect('dashboard')->with('message', 'Feedback published successfully');
+        }
+
     }
 
     public function create()
@@ -79,8 +82,36 @@ class FeedbackController extends Controller
 
     public function edit($slug)
     {
-        $feedback = Feedbacks::where('title', $slug)->first();
+        $data = explode('-', $slug);
+        $feedback = $this->feedbacksService->getFeedbackById($data[0]);
         return view('feedbacks.edit', compact('feedback'));
+    }
+
+    public function update(Request $request)
+    {
+
+        $data = [
+            'city_id' => $request->city,
+            'title' => $request->get('title'),
+            'text' => $request->get('text'),
+            'rating' => $request->rating,
+            'author_id' => $request->user()->id,
+        ];
+
+        $feedbackId = $request->input('feedback_id');
+        $slug = Str::slug($feedbackId.'-'.$data['title']);
+
+        $validator = Validator::make($data, [
+            'title' => 'required|max:100',
+            'text' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('edit/' . $slug)->withErrors('Title already exist or something else')->withInput();
+        } else {
+            $this->feedbacksService->update($feedbackId, $data);
+            return redirect('dashboard')->with('message', 'Feedback updated successfully');
+        }
     }
 
 }

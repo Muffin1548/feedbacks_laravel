@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Repositories\UserRepository;
 
 class UserService
@@ -15,7 +14,7 @@ class UserService
         $this->userRepository = new UserRepository();
     }
 
-    public function getUserProfile(array $data, int $id): array
+    public function getUserProfile(int $id): array
     {
         $data['user'] = $this->userRepository->getUserById($id);
 
