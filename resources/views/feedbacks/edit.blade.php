@@ -2,11 +2,49 @@
 @section('content')
     <form action="{{ url("/update") }}" method="post">
         <input type="hidden" name="feedback_id" value="{{ $feedback->id }}{{ old('feedback_id') }}">
-        <select name="city" id="city" class="form-control input-lg">
-            @foreach($cities as $city)
-                <option value="{{$city->id}}" name="city_id">{{$city->name}} </option>
-            @endforeach
-        </select>
+        <label>Не выбирать конкретный город
+            <input type="radio" id="getNone" name="getSelect" value="getNone">
+        </label>
+        <div class="selectCity">
+            <label>Выбрать свой город
+                <input type="radio" id="getAll" name="getSelect" value="getAll" checked>
+            </label>
+            <div id="type_code">
+                <div id="input">
+                    <input type="text" name="city" placeholder="Город" id="inputCity">
+                </div>
+                <!-- end .input -->
+                <div class="radio_wrapp">
+                    <label class="custom_radio_hold">
+                        <input type="radio" name="typecode" value="all" checked>
+                        <span class="custom_radio"></span>
+                        Все населённые пункты
+                    </label>
+                    <!-- end .custom_radio_hold -->
+                    <label class="custom_radio_hold">
+                        <input type="radio" name="typecode" value="city">
+                        <span class="custom_radio"></span>
+                        Только города
+                    </label>
+                    <!-- end .custom_radio_hold -->
+                    <label class="custom_radio_hold">
+                        <input type="radio" name="typecode" value="settlement">
+                        <span class="custom_radio"></span>
+                        Города и посёлки
+                    </label>
+                    <!-- end .custom_radio_hold -->
+                </div>
+                <!-- end .radio_wrapp -->
+            </div>
+            <label>Выбрать город для которого создан отзыв
+                <input type="radio" id="getDb" name="getSelect" value="getDb">
+            </label>
+            <select name="city" id="city" class="form-control input-lg" disabled>
+                @foreach($cities as $city)
+                    <option value="{{$city->name}}" name="city">{{$city->name}} </option>
+                @endforeach
+            </select>
+        </div>
         <input type="hidden" name="_token" value="{{csrf_token()}}">
         <div class="form-group">
             <input required="required" value="@if(!old('title')){{$feedback->title}}@endif{{ old('title') }}"

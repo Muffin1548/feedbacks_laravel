@@ -43,11 +43,16 @@ class FeedbacksService
 
     public function update(int $id, array $data)
     {
+        if(isset($data['city_id'])) {
+            $city_id = $this->cityService->getCityByName($data['city_id']);
+        }else {
+            $city_id = null;
+        }
         $feedback = $this->getFeedbackById($id);
         if ($feedback) {
             $feedback['title'] = $data['title'];;
             $feedback['text'] = $data['text'];
-            $feedback['city_id'] = $data['city_id'];
+            $feedback['city_id'] = $city_id;
             $feedback['author_id'] = $data['author_id'];
             $feedback['rating'] = $data['rating'];
             return $this->feedbacksRepository->updateFeedback($feedback);
